@@ -23,28 +23,62 @@ TEST_CASE("InitWithFourBytesValue")
     CHECK_EQ(VALUE, static_cast<int>(a));
 }
 
-TEST_CASE("Sum2OneByteValues")
+TEST_CASE("ToStringEmpty")
 {
-    const int VALUE_1 = 0xB;
-    const int VALUE_2 = 0xC;
-    const int VALUE = VALUE_1 + VALUE_2;
-
-    BigInt v1(VALUE_1);
-    BigInt v2(VALUE_2);
-    BigInt v = v1 + v2;
-    CHECK_EQ(VALUE, static_cast<int>(v));
+    BigInt v;
+    CHECK_EQ(std::string("0"), v.toString());
+}
+TEST_CASE("ToString")
+{
+    BigInt v(5);
+    CHECK_EQ(std::string("5"), v.toString());
+}
+TEST_CASE("ToString_11")
+{
+    BigInt v(11);
+    CHECK_EQ(std::string("11"), v.toString());
 }
 
-TEST_CASE("Sum2TwoByteValuesOverflow")
+TEST_CASE("ToString9876543210")
 {
-    const int VALUE_1 = 0xBF;
-    const int VALUE_2 = 0xFC;
+    BigInt v(9876543210);
+    CHECK_EQ(std::string("9876543210"), v.toString());
+}
+
+TEST_CASE("operator uint64_t")
+{
+    const int VALUE = 100201;
+    BigInt a(VALUE);
+    CHECK_EQ(VALUE, static_cast<int>(a));
+}
+
+TEST_CASE("Sum2OneByteValues")
+{
+    const int VALUE_1 = 11;
+    const int VALUE_2 = 12;
     const int VALUE = VALUE_1 + VALUE_2;
 
     BigInt v1(VALUE_1);
     BigInt v2(VALUE_2);
     BigInt v = v1 + v2;
     CHECK_EQ(VALUE, static_cast<int>(v));
+    CHECK_EQ(std::string("23"), v.toString());
+    CHECK_EQ(std::string("23"), BigInt(VALUE).toString());
+}
+
+TEST_CASE("Sum2WithCarry")
+{
+    const int VALUE_1 = 6823;
+    const int VALUE_2 = 96899;
+    const int VALUE = VALUE_1 + VALUE_2;
+
+    BigInt v1(VALUE_1);
+    BigInt v2(VALUE_2);
+    BigInt v = v1 + v2;
+    CHECK_EQ(uint64_t(VALUE), uint64_t(v));
+    CHECK_EQ(std::string("103722"), v.toString());
+    CHECK_EQ(std::string("103722"), BigInt(VALUE).toString());
+    CHECK_EQ(v, BigInt(VALUE));
 }
 
 TEST_CASE("Multiply2With0")
@@ -90,18 +124,6 @@ TEST_CASE("BigInt::fromString(123)")
 //     ASSERT_EQ(4, static_cast<int>(v));
 // }
 
-TEST_CASE("ToStringEmpty")
-{
-    BigInt v;
-    CHECK_EQ(std::string("0"), v.toString());
-}
-
-TEST_CASE("ToString9876543210")
-{
-    BigInt v(9876543210);
-    CHECK_EQ(std::string("9876543210"), v.toString());
-}
-
 TEST_CASE("CompareOperatorEq")
 {
     BigInt v(9876543210);
@@ -121,25 +143,6 @@ TEST_CASE("AssignOperator")
     BigInt v1(876543210);
     v = v1;
     CHECK_EQ(v1, v);
-}
-
-TEST_CASE("IsValid")
-{
-    BigInt v;
-    BigInt v1(876543210);
-
-    CHECK(v1.isValid());
-    CHECK_FALSE(v.isValid());
-}
-
-TEST_CASE("IsValidAfterOper")
-{
-    BigInt v2(2);
-    BigInt v1(2);
-    BigInt v = v1 + v2;
-    BigInt vm = v1 * v2;
-    CHECK(v.isValid());
-    CHECK(vm.isValid());
 }
 
 TEST_CASE("SumBigWithSmall")

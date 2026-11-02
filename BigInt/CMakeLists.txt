@@ -22,8 +22,8 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(doctest benchmark)
 
-add_executable(ut_bigint test.cpp)
+add_executable(ut_bigint test.cpp BigInt.cpp)
 target_link_libraries(ut_bigint doctest)
 
-add_executable(bigint_benchmark benchmark.cpp)
+add_executable(bigint_benchmark benchmark.cpp BigInt.cpp)
 target_link_libraries(bigint_benchmark benchmark)
