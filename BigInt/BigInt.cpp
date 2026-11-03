@@ -53,7 +53,7 @@ BigInt BigInt::operator * (const BigInt &rhs) {
     if (thisCnt == 0 || rhsCnt == 0) {
         return retval;
     }
-    const u_int8_t *first, *second;
+    const uint8_t *first, *second;
     int firstCnt, secondCnt;
     if (thisCnt < rhsCnt) {
         first = _number;

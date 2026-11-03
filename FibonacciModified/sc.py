@@ -1,4 +1,7 @@
 
+import sys
+sys.set_int_max_str_digits(0)
+
 data = list(map(int, input().split(' ')))
 t_1 = data[0]
 t_2 = data[1]

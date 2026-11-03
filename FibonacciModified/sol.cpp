@@ -1,36 +1,33 @@
 #include <iostream>
-#include "../BigInt/BigInt.hpp"
+#include <vector>
+#include <memory>
 
-using namespace std;
+#include "../BigInt/BigInt.cpp"
 
-BigInt fib(int N, BigInt *arr) {
-    if (false == arr[N].isValid()) {
+std::shared_ptr<BigInt> fib(int N, std::vector<std::shared_ptr<BigInt>> &arr) {
+    if (nullptr == arr[N]) {
         auto a = fib(N - 1, arr);
         auto b = fib(N - 1, arr);
         auto _2 = fib(N - 2, arr);
-        auto pow = a*b;
-        auto sum = _2 + pow;
-        arr[N] = sum;
-        //cout << "N: " << N << ", a: " << a.toString() << ", b: " << b.toString() << ", pow: " << pow.toString() << ", _2: " << _2.toString() << ", sum: " << sum.toString() <<endl;
-        //std::cout << "invalid, N: " << N << ", " << arr[N].toString() << " pow: " << pow.toString() << " sum: " << sum.toString() << std::endl;
+        auto pow = *a * *b;
+        auto sum = *_2 + pow;
+        arr[N] = std::make_shared<BigInt>(sum);
         return arr[N];
     } else {
-        //std::cout << "valid, N: " << N << ", " << arr[N].toString() << std::endl;
         return arr[N];
     }
 }
 
 int main(void) {
     int t1 = 0, t2 = 1, N = 20;
-    //std::cin >> t1 >> t2 >> N;
-    //std::cout << "(" << t1 << ", " << t2 << ", " << N << ")" << std::endl;
+    std::cin >> t1 >> t2 >> N;
 
-    BigInt *data = new BigInt[N + 1]();
-    data[0] = BigInt(0);
-    data[1] = BigInt(t1);
-    data[2] = BigInt(t2);
-    fib(N, data);
-    std::cout << data[N].toString() << std::endl;
-    delete []data;
+    std::vector<std::shared_ptr<BigInt>> data(N + 1);
+    data[0].reset(new BigInt(0));
+    data[1].reset(new BigInt(t1));
+    data[2].reset(new BigInt(t2));
+    const auto solution = fib(N, data);
+    std::cout << solution->toString() << std::endl;
+
     return 0;
 }
