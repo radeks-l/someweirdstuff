@@ -20,10 +20,6 @@ private:
     enum { SIZE = 44000, INVALID };
     int _cnt = 1;
     uint8_t _number[SIZE] = {0};
-
-    void clear();
-    uint64_t pow10(int a) const;
-    void cnt();
 };
 
 std::ostream &operator<<(std::ostream &os, const BigInt &value);
